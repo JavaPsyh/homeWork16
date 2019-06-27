@@ -1,16 +1,20 @@
 package task;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.Consumer;
 
 public class MailApp {
     public static void main(String[] args) {
     }
-    public interface Sendable<T>{
+
+    public interface Sendable<T> {
         String getFrom();
+
         String getTo();
+
         T getContent();
     }
+
     public static class MailMessage implements Sendable<String> {
         private final String FROM, TO, CONTENT;
 
@@ -36,7 +40,7 @@ public class MailApp {
         }
     }
 
-    public static class Salary implements Sendable<Integer>{
+    public static class Salary implements Sendable<Integer> {
 
         private final String FROM, TO;
         private Integer salary;
@@ -78,17 +82,19 @@ public class MailApp {
                     map.put(key, new LinkedList<>());
                 }
                 map.get(key).add(sendable.getContent());
-            }catch (NullPointerException npe) {
+            } catch (NullPointerException npe) {
                 npe.printStackTrace();
             }
         }
-        private Map<String, List<T>> map  = new HashMap<String, List<T>>() {
+
+        private Map<String, List<T>> map = new HashMap<String, List<T>>() {
             @Override
             public List<T> get(Object key) {
                 return super.getOrDefault(key, new ArrayList<>());
             }
         };
-        public Map<String, List<T>> getMailBox(){
+
+        public Map<String, List<T>> getMailBox() {
             return this.map;
         }
     }
