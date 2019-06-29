@@ -1,6 +1,9 @@
 package task;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class MailApp {
@@ -16,38 +19,41 @@ public class MailApp {
     }
 
     public static class MailMessage implements Sendable<String> {
-        private final String FROM, TO, CONTENT;
+        private String from;
+        private String to;
+        private String content;
 
         public MailMessage(String from, String to, String content) {
-            this.FROM = from;
-            this.TO = to;
-            this.CONTENT = content;
+            this.from = from;
+            this.to = to;
+            this.content = content;
         }
 
         @Override
         public String getFrom() {
-            return FROM;
+            return from;
         }
 
         @Override
         public String getTo() {
-            return TO;
+            return to;
         }
 
         @Override
         public String getContent() {
-            return CONTENT;
+            return content;
         }
     }
 
     public static class Salary implements Sendable<Integer> {
 
-        private final String FROM, TO;
+        private String from;
+        private String to;
         private Integer salary;
 
         public Salary(String from, String to, Integer salary) {
-            this.FROM = from;
-            this.TO = to;
+            this.from = from;
+            this.to = to;
             this.salary = salary;
         }
 
@@ -57,12 +63,12 @@ public class MailApp {
 
         @Override
         public String getFrom() {
-            return FROM;
+            return from;
         }
 
         @Override
         public String getTo() {
-            return TO;
+            return to;
         }
 
         @Override
@@ -75,22 +81,17 @@ public class MailApp {
 
         @Override
         public void accept(Sendable<T> sendable) {
-            String key = "";
-            try {
-                key = sendable.getTo();
-                if (!map.containsKey(key)) {
-                    map.put(key, new LinkedList<>());
-                }
-                map.get(key).add(sendable.getContent());
-            } catch (NullPointerException npe) {
-                npe.printStackTrace();
+            String key = sendable.getTo();
+            if (!map.containsKey(key)) { // without this check Stepik don't validate
+                map.put(key, new LinkedList<>());
             }
+            map.get(key).add(sendable.getContent());
         }
 
         private Map<String, List<T>> map = new HashMap<String, List<T>>() {
             @Override
             public List<T> get(Object key) {
-                return super.getOrDefault(key, new ArrayList<>());
+                return super.getOrDefault(key, new LinkedList<>());
             }
         };
 
